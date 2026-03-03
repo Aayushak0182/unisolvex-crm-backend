@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: unisolvex-crm-backend
+    env: node
+    rootDir: .
+    plan: free
+    buildCommand: npm install
+    startCommand: npm run server
+    healthCheckPath: /health
+    envVars:
+      - key: WHATSAPP_VERIFY_TOKEN
+        sync: false
