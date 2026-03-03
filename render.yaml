@@ -4,9 +4,11 @@ services:
     env: node
     rootDir: .
     plan: free
-    buildCommand: npm install
+    buildCommand: npm ci --omit=dev
     startCommand: npm run server
     healthCheckPath: /health
     envVars:
+      - key: NODE_VERSION
+        value: 20
       - key: WHATSAPP_VERIFY_TOKEN
         sync: false
