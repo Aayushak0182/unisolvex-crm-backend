@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "main": "server.mjs",
   "scripts": {
+    "server": "node server.mjs",
     "start": "node server.mjs"
   },
   "dependencies": {
