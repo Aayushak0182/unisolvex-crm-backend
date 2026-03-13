@@ -1,55 +1,14 @@
-const express = require("express");
-const app = express();
+// Deprecated: this backend is no longer used by the CRM UI.
+// Keep as a thin wrapper so `npm start` inside `backend/` still works.
+// Source of truth: repo root `server.mjs`.
 
-app.use(express.json());
+/* eslint-disable no-console */
 
-let messages = []; // temporary storage
+console.warn('[DEPRECATED] backend/server.js is a wrapper. Starting ../server.mjs instead.');
+console.warn('Run from repo root for clarity: `npm run server`');
 
-// Webhook Verification
-app.get("/webhook", (req, res) => {
-  const VERIFY_TOKEN = "unisolvex_token";
-
-  const mode = req.query["hub.mode"];
-  const token = req.query["hub.verify_token"];
-  const challenge = req.query["hub.challenge"];
-
-  if (mode && token === VERIFY_TOKEN) {
-    return res.status(200).send(challenge);
-  }
-  res.sendStatus(403);
+import('../server.mjs').catch((err) => {
+  console.error('Failed to start ../server.mjs:', err);
+  process.exitCode = 1;
 });
 
-// Receive Messages
-app.post("/webhook", (req, res) => {
-  const body = req.body;
-
-  if (body.entry) {
-    const msg = body.entry[0].changes[0].value.messages?.[0];
-
-    if (msg) {
-      const newMessage = {
-        from: msg.from,
-        text: msg.text?.body || "Non-text message",
-        time: new Date().toLocaleString()
-      };
-
-      messages.unshift(newMessage);
-      console.log("New Message:", newMessage);
-    }
-  }
-
-  res.sendStatus(200);
-});
-
-// API to fetch messages
-app.get("/messages", (req, res) => {
-  res.json(messages);
-});
-
-// Root
-app.get("/", (req, res) => {
-  res.send("UniSolveX CRM Backend Running 🚀");
-});
-
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log("Server running"));
